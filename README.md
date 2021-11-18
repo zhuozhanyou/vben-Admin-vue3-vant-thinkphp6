@@ -5,6 +5,7 @@ vben admin 一款很优秀的ant vue前端框架，但对于一个后端人员�
 
 #### 软件架构
 前端vben admin https://gitee.com/annsion/vue-vben-admin
+
 后端tp6 https://gitee.com/liu21st/thinkphp
 
 #### 安装教程
@@ -20,6 +21,10 @@ vben admin 一款很优秀的ant vue前端框架，但对于一个后端人员�
 1.  修改front目录下的.env.development文件的VITE_PROXY为刚创建的tp6站点；
 2.  终端运行yarn install;
 3.  终端运行yarn run serve,编译完成即可访问 http://localhost:3100/  ;
+
+在线预览 http://wms.hylg.cn/
+
+登录账号admin 密码123456
 
 #### 使用说明
 
