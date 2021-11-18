@@ -32,7 +32,7 @@ return [
             'port'       => 6379,
             'password'   => '',
             'select'     => 0,
-            'prefix'     => 'qn:wms:',
+            'prefix'     => 'wms:',
             'serialize'  => []
         ]
     ],
