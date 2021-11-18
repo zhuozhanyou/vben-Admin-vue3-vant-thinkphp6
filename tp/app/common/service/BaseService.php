@@ -42,7 +42,7 @@ class BaseService
     {
 
     }
-    
+
 
     /**
      * 获取错误信息
