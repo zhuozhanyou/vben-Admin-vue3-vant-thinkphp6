@@ -40,21 +40,9 @@ class BaseService
      */
     protected function initialize()
     {
-        // 获取当前操作的商城ID
-        $this->getStoreId();
-    }
 
-    /**
-     * 获取当前操作的商城ID
-     * @return int|null
-     */
-    protected function getStoreId()
-    {
-        if (empty($this->storeId) && in_array(app_name(), ['store', 'api'])) {
-            $this->storeId = getStoreId();
-        }
-        return $this->storeId;
     }
+    
 
     /**
      * 获取错误信息
