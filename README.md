@@ -8,30 +8,19 @@ vben admin 一款很优秀的ant vue前端框架，但对于一个后端人员�
 后端tp6 https://gitee.com/liu21st/thinkphp
 
 #### 安装教程
+项目tp目录为tp6文件，front为vben admin文。
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+### tp6安装
+1.  下载宝塔或phpstudy，并安装好nginx、php7.4+、mysql、redis、composer；
+2.  composer install安装tp6依赖；
+3.  创建数据库，并导入sql，配置.env文件，配置config/cache.php为redis；
+4.  使用宝塔或phpstudy创建web站点，运行查看是否正常；
+
+### vben admin 安装
+1.  修改front目录下的.env.development文件的VITE_PROXY为刚创建的tp6站点；
+2.  终端运行yarn install;
+3.  终端运行yarn run serve,编译完成即可访问 http://localhost:3100/  ;
 
 #### 使用说明
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
-
-
-#### 特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+qq群：248367725
