@@ -3,3 +3,5 @@
 /vendor
 *.log
 .env
+/public/storage
+/public/uploads
