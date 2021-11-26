@@ -10,13 +10,16 @@ return [
     // 退出登录
     '/passport/logout',
 
-    // 当前商城信息
+
     '/system/getUserInfo',
     // 当前用户信息
     '/system/getPermCode',
     // 获取路由菜单信息
     '/system/getMenuList',
     // 修改当前用户信息
+
+    '/system.dictionaries/getDic',
+    // 获取数据字典数据
 
     // 文件库列表
     '/files/list',

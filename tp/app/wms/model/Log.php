@@ -10,22 +10,24 @@ class Log extends BaseModel
 {
     protected $name = 'sys_log';
     protected $pk = 'id';
+
+    public function api()
+    {
+        return $this->hasOne(Api::class,'url','url');
+    }
     private function setWhere(array $param)
     {
         $query = $this->db();
-
-        !empty($param['user_name']) && $query->where("{$this->name}.user_name", "like", "%{$param['user_name']}%");
-        !empty($param['api']) && $query->where("sys_api.name|{$this->name}.url", "like", "%{$param['api']}%");
-        !empty($param['op_time']) && $query->whereTime("{$this->name}.create_time", "between", $param['op_time']);
+        !empty($param['user_name']) && $query->where("user_name", "like", "%{$param['user_name']}%");
+        !empty($param['api']) && $query->hasWhere("api",function($query) use($param){ $query->where("name", "like", "%{$param['api']}%");});
+        !empty($param['op_time']) && $query->whereTime("create_time", "between", $param['op_time']);
 
         return $query;
     }
     public function getList(array $param)
     {
         $query = $this->setWhere($param);
-        return $query->alias($this->name)->field(["$this->name.*,sys_api.name api_name"])
-                ->leftJoin("sys_api","sys_api.url = {$this->name}.url")
-                ->order($this->listOrder($param))->select()->toArray();
+        return $query->with('api')->order($this->listOrder($param))->select()->toArray();
     }
 
     public function add(array $data)

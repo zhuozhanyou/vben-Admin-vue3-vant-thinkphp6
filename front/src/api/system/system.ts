@@ -1,48 +1,39 @@
-import {
-  DeptListItem,
-  MenuParams,
-  RoleParams,
-  RolePageParams,
-  MenuListGetResultModel,
-  DeptListGetResultModel,
-  RolePageListGetResultModel,
-  RoleListGetResultModel,
-} from './model/systemModel';
 import { defHttp } from '/@/utils/http/axios';
 
 enum Api {
-  MenuList = '/menu/getList',
-  MenuAdd = '/menu/add',
-  MenuDel = '/menu/del',
-  DeptList = '/dept/getList',
-  DeptAdd = '/dept/add',
-  DeptDel = '/dept/del',
+  MenuList = '/system.menu/getList',
+  MenuAdd = '/system.menu/add',
+  MenuDel = '/system.menu/del',
+  DeptList = '/system.dept/getList',
+  DeptAdd = '/system.dept/add',
+  DeptDel = '/system.dept/del',
 
-  AccountList = '/user/getList',
-  AccountAdd = '/user/add',
-  AccountDel = '/user/del',
-  ChangePassword = '/user/changePassword',
+  AccountList = '/system.user/getList',
+  AccountAdd = '/system.user/add',
+  AccountDel = '/system.user/del',
+  ChangePassword = '/system.user/changePassword',
 
-  setRoleStatus = '/role/setRoleStatus',
-  RolePageList = '/role/getList',
-  RoleAdd = '/role/add',
-  RoleDel = '/role/del',
-  GetAllRoleList = '/role/getListAll',
+  setRoleStatus = '/system.role/setRoleStatus',
+  RolePageList = '/system.role/getList',
+  RoleAdd = '/system.role/add',
+  RoleDel = '/system.role/del',
+  GetAllRoleList = '/system.role/getListAll',
 
-  DicList = '/Dictionaries/getList',
-  getListTree = '/Dictionaries/getListTree',
-  DicAdd = '/Dictionaries/add',
-  DicDel = '/Dictionaries/del',
+  DicList = '/system.Dictionaries/getList',
+  getListTree = '/system.Dictionaries/getListTree',
+  DicAdd = '/system.Dictionaries/add',
+  DicDel = '/system.Dictionaries/del',
+  DicItem = '/system.Dictionaries/getDic',
 
-  ApiList = '/api/getList',
-  ApiAdd = '/api/add',
-  ApiDel = '/api/del',
+  ApiList = '/system.api/getList',
+  ApiAdd = '/system.api/add',
+  ApiDel = '/system.api/del',
 
-  LogList = '/log/getList',
+  LogList = '/system.log/getList',
 
-  NoticeList = '/notice/getList',
-  NoticeAdd = '/notice/add',
-  NoticeDel = '/notice/del',
+  NoticeList = '/system.notice/getList',
+  NoticeAdd = '/system.notice/add',
+  NoticeDel = '/system.notice/del',
 }
 export const getMenuList = (params?: any) => defHttp.get<any>({ url: Api.MenuList, params });
 
@@ -85,6 +76,8 @@ export const getListTree = () => defHttp.get<any>({ url: Api.getListTree });
 export const DicAdd = (params?: any) => defHttp.post<any[]>({ url: Api.DicAdd, params });
 
 export const DicDel = (params?: any) => defHttp.post<any[]>({ url: Api.DicDel, params });
+
+export const DicItem = (params?: any) => defHttp.post<any[]>({ url: Api.DicItem, params });
 
 export const ApiList = (params: any) => defHttp.get<any>({ url: Api.ApiList, params });
 

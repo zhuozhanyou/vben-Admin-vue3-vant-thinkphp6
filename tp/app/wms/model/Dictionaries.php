@@ -5,6 +5,7 @@ declare (strict_types = 1);
 namespace app\wms\model;
 
 use app\wms\model\BaseModel;
+use think\facade\Cache;
 
 class Dictionaries extends BaseModel
 {
@@ -54,5 +55,29 @@ class Dictionaries extends BaseModel
         {
             return $this->save($data);
         }
+    }
+    public function createCache()
+    {
+        $where = [];
+        $where[] = ['type', '=', 20];
+        $list = $this->where($where)->order(['parent_id' => 'asc','sort'=>'asc'])->column('parent_id,name,code');
+        $parentId = array_unique(array_column($list,'parent_id'));
+        $parent = $this->where('id','in',$parentId)->column('code','id');
+        $data = [];
+        foreach($list as $v)
+        {
+            $data[$parent[$v['parent_id']]][] = ['id'=>$v['code'],'name'=>$v['name']];
+        }
+        Cache::set('dic', $data);
+        return $data;
+    }
+    public function getDic(array $params = [])
+    {
+        $data = Cache::get('dic');
+        if(empty($data))
+        {
+            $data = $this->createCache();
+        }
+        return empty($params['item'])?$data:$data[$params['item']];
     }
 }

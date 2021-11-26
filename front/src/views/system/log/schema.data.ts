@@ -1,4 +1,3 @@
-import { time } from 'console';
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 
@@ -10,7 +9,7 @@ export const columns: BasicColumn[] = [
   },
   {
     title: '操作功能',
-    dataIndex: 'api_name',
+    dataIndex: 'api.name',
     width: 200,
     align: 'left',
   },
@@ -54,7 +53,7 @@ export const searchFormSchema: FormSchema[] = [
   },
   {
     field: 'api',
-    label: '访问路径',
+    label: '操作功能',
     component: 'Input',
     colProps: { span: 6 },
   },
