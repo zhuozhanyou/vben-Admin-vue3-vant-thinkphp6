@@ -6,6 +6,7 @@ declare (strict_types=1);
  * 应用公共函数库文件
  */
 
+use app\wms\model\Dictionaries;
 use think\facade\Cache;
 use think\Response;
 use think\facade\Env;
@@ -411,4 +412,14 @@ function convert_left_slash(string $string)
 function hide_mobile(string $mobile)
 {
     return substr_replace($mobile, '****', 3, 4);
+}
+
+function getDic(string $item='')
+{
+    $data = Cache::get('dic');
+    if(empty($data))
+    {
+        $data = Dictionaries::createCache();
+    }
+    return empty($item)?$data:array_column($data[$item],'name','id');
 }

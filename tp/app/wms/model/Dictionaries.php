@@ -56,13 +56,13 @@ class Dictionaries extends BaseModel
             return $this->save($data);
         }
     }
-    public function createCache()
+    public static function createCache()
     {
         $where = [];
         $where[] = ['type', '=', 20];
-        $list = $this->where($where)->order(['parent_id' => 'asc','sort'=>'asc'])->column('parent_id,name,code');
+        $list = (new static)->where($where)->order(['parent_id' => 'asc','sort'=>'asc'])->column('parent_id,name,code');
         $parentId = array_unique(array_column($list,'parent_id'));
-        $parent = $this->where('id','in',$parentId)->column('code','id');
+        $parent = (new static)->where('id','in',$parentId)->column('code','id');
         $data = [];
         foreach($list as $v)
         {
