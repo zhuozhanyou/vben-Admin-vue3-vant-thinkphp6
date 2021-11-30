@@ -1,8 +1,8 @@
 <template>
   <div>
-    <BasicTable @register="registerTable">
+    <BasicTable @register="registerTable" @fetch-success="onFetchSuccess">
       <template #toolbar>
-        <a-button v-if="hasPermission('addMenu')" type="primary" @click="handleCreate"> 新增菜单 </a-button>
+        <a-button v-if="hasPermission('addDept')" type="primary" @click="handleCreate"> 新增 </a-button>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -10,7 +10,7 @@
             {
               icon: 'clarity:note-edit-line',
               onClick: handleEdit.bind(null, record),
-              auth: 'editMenu',
+              auth: 'editDept',
             },
             {
               icon: 'ant-design:delete-outlined',
@@ -19,35 +19,37 @@
                 title: '是否确认删除',
                 confirm: handleDelete.bind(null, record),
               },
-              auth: 'delMenu',
+              auth: 'delDept',
             },
           ]"
         />
       </template>
     </BasicTable>
-    <MenuDrawer @register="registerDrawer" @success="handleSuccess" />
+    <Modal @register="registerModal" @success="handleSuccess" />
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { defineComponent, nextTick } from 'vue';
+
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { getMenuList, MenuDel } from '/@/api/system/system';
-  import { useDrawer } from '/@/components/Drawer';
-  import MenuDrawer from './MenuDrawer.vue';
-  import { columns, searchFormSchema } from './menu.data';
+  import { StockList, StockDel } from '/@/api/stock/stock';
+
+  import { useModal } from '/@/components/Modal';
+  import Modal from './Modal.vue';
+
+  import { columns, searchFormSchema } from './schema.data';
   import { usePermission } from '/@/hooks/web/usePermission';
 
   export default defineComponent({
-    name: 'MenuManagement',
-    components: { BasicTable, MenuDrawer, TableAction },
+    name: 'DeptManagement',
+    components: { BasicTable, Modal, TableAction },
     setup() {
       const { hasPermission } = usePermission();
-      const [registerDrawer, { openDrawer }] = useDrawer();
-      const showAction = hasPermission('editMenu') || hasPermission('delMenu');
-      const [registerTable, { reload, updateTableDataRecord }] = useTable({
-        title: '菜单列表',
-        api: getMenuList,
-        rowKey: 'menu_id',
+      const showAction = hasPermission('editDept') || hasPermission('delDept');
+      const [registerModal, { openModal }] = useModal();
+      const [registerTable, { reload, expandAll }] = useTable({
+        title: '仓库列表',
+        api: StockList,
         columns,
         formConfig: {
           labelWidth: 120,
@@ -72,42 +74,39 @@
       });
 
       function handleCreate() {
-        openDrawer(true, {
+        openModal(true, {
           isUpdate: false,
         });
       }
 
       function handleEdit(record: Recordable) {
-        openDrawer(true, {
+        openModal(true, {
           record,
           isUpdate: true,
         });
       }
 
       function handleDelete(record: Recordable) {
-        MenuDel(record.menu_id).then(() => {
+        StockDel(record.id).then(() => {
           reload();
         });
       }
 
-      function handleSuccess({ isUpdate, values }) {
-        if (isUpdate) {
-          // 演示不刷新表格直接更新内部数据。
-          // 注意：updateTableDataRecord要求表格的rowKey属性为string并且存在于每一行的record的keys中
-          updateTableDataRecord(values.menu_id, values);
-        } else {
-          reload();
-        }
+      function handleSuccess() {
+        reload();
       }
-
+      function onFetchSuccess() {
+        nextTick(expandAll);
+      }
       return {
         registerTable,
-        registerDrawer,
+        registerModal,
         handleCreate,
         handleEdit,
         handleDelete,
         handleSuccess,
         hasPermission,
+        onFetchSuccess,
       };
     },
   });

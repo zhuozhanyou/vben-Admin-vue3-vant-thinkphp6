@@ -1,64 +1,58 @@
 <template>
   <PageWrapper dense contentFullHeight fixedHeight contentClass="flex">
-    <DeptTree class="w-1/4 xl:w-1/5" @select="handleSelect" />
+    <LeftTree class="w-1/4 xl:w-1/5" @select="handleSelect" />
     <BasicTable @register="registerTable" class="w-3/4 xl:w-4/5" :searchInfo="searchInfo">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate">新增账号</a-button>
+        <a-button v-if="hasPermission('addUser')" type="primary" @click="handleCreate">新增</a-button>
       </template>
       <template #action="{ record }">
         <TableAction
           :actions="[
             {
-              icon: 'clarity:info-standard-line',
-              tooltip: '查看用户详情',
-              onClick: handleView.bind(null, record),
-            },
-            {
               icon: 'clarity:note-edit-line',
-              tooltip: '编辑用户资料',
+              tooltip: '编辑',
               onClick: handleEdit.bind(null, record),
+              auth: 'editUser',
             },
             {
               icon: 'ant-design:delete-outlined',
               color: 'error',
-              tooltip: '删除此账号',
+              tooltip: '删除此',
               popConfirm: {
                 title: '是否确认删除',
                 confirm: handleDelete.bind(null, record),
               },
+              auth: 'delUser',
             },
           ]"
         />
       </template>
     </BasicTable>
-    <AccountModal @register="registerModal" @success="handleSuccess" />
+    <Modal @register="registerModal" @success="handleSuccess" />
   </PageWrapper>
 </template>
 <script lang="ts">
   import { defineComponent, reactive } from 'vue';
-
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { getAccountList } from '/@/api/demo/system';
+  import { LocationList, LocationDel } from '/@/api/stock/stock';
   import { PageWrapper } from '/@/components/Page';
-  import DeptTree from './DeptTree.vue';
-
+  import LeftTree from './LeftTree.vue';
   import { useModal } from '/@/components/Modal';
-  import AccountModal from './AccountModal.vue';
-
-  import { columns, searchFormSchema } from './account.data';
-  import { useGo } from '/@/hooks/web/usePage';
+  import Modal from './Modal.vue';
+  import { columns, searchFormSchema } from './schema.data';
+  import { usePermission } from '/@/hooks/web/usePermission';
 
   export default defineComponent({
     name: 'AccountManagement',
-    components: { BasicTable, PageWrapper, DeptTree, AccountModal, TableAction },
+    components: { BasicTable, PageWrapper, LeftTree, Modal, TableAction },
     setup() {
-      const go = useGo();
+      const { hasPermission } = usePermission();
+      const showAction = hasPermission('editUser') || hasPermission('delUser');
       const [registerModal, { openModal }] = useModal();
       const searchInfo = reactive<Recordable>({});
-      const [registerTable, { reload, updateTableDataRecord }] = useTable({
-        title: '账号列表',
-        api: getAccountList,
-        rowKey: 'id',
+      const [registerTable, { reload }] = useTable({
+        title: '储位列表',
+        api: LocationList,
         columns,
         formConfig: {
           labelWidth: 120,
@@ -68,15 +62,16 @@
         useSearchForm: true,
         showTableSetting: true,
         bordered: true,
+        showIndexColumn: false,
         handleSearchInfoFn(info) {
-          console.log('handleSearchInfoFn', info);
           return info;
         },
         actionColumn: {
-          width: 120,
+          width: 80,
           title: '操作',
           dataIndex: 'action',
           slots: { customRender: 'action' },
+          ifShow: showAction,
         },
       });
 
@@ -87,7 +82,6 @@
       }
 
       function handleEdit(record: Recordable) {
-        console.log(record);
         openModal(true, {
           record,
           isUpdate: true,
@@ -95,26 +89,18 @@
       }
 
       function handleDelete(record: Recordable) {
-        console.log(record);
-      }
-
-      function handleSuccess({ isUpdate, values }) {
-        if (isUpdate) {
-          // 演示不刷新表格直接更新内部数据。
-          // 注意：updateTableDataRecord要求表格的rowKey属性为string并且存在于每一行的record的keys中
-          updateTableDataRecord(values.id, values);
-        } else {
+        LocationDel(record.id).then(() => {
           reload();
-        }
+        });
       }
 
-      function handleSelect(deptId = '') {
-        searchInfo.deptId = deptId;
+      function handleSuccess() {
         reload();
       }
 
-      function handleView(record: Recordable) {
-        go('/system/account_detail/' + record.id);
+      function handleSelect(id = '') {
+        searchInfo.stock_id = id;
+        reload();
       }
 
       return {
@@ -125,8 +111,8 @@
         handleDelete,
         handleSuccess,
         handleSelect,
-        handleView,
         searchInfo,
+        hasPermission,
       };
     },
   });

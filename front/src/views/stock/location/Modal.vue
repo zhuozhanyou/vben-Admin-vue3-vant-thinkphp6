@@ -1,5 +1,11 @@
 <template>
-  <BasicModal v-bind="$attrs" @register="registerModal" :title="getTitle" @ok="handleSubmit">
+  <BasicModal
+    v-bind="$attrs"
+    @register="registerModal"
+    :title="getTitle"
+    @ok="handleSubmit"
+    :minHeight="320"
+  >
     <BasicForm @register="registerForm" />
   </BasicModal>
 </template>
@@ -7,20 +13,23 @@
   import { defineComponent, ref, computed, unref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
-  import { formSchema } from './data';
+  import { accountFormSchema } from './schema.data';
+  import { LocationAdd } from '/@/api/stock/stock';
 
-  import { ApiList, ApiAdd } from '/@/api/system/system';
   export default defineComponent({
-    name: 'DeptModal',
+    name: 'AccountModal',
     components: { BasicModal, BasicForm },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const isUpdate = ref(true);
 
-      const [registerForm, { resetFields, setFieldsValue, updateSchema, validate }] = useForm({
+      const [registerForm, { setFieldsValue, resetFields, validate }] = useForm({
         labelWidth: 100,
-        schemas: formSchema,
+        schemas: accountFormSchema,
         showActionButtonGroup: false,
+        actionColOptions: {
+          span: 24,
+        },
       });
 
       const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
@@ -33,15 +42,6 @@
             ...data.record,
           });
         }
-        const treeData = await ApiList([]);
-        treeData.unshift({
-          name: '顶级目录',
-          id: 0,
-        });
-        updateSchema({
-          field: 'pid',
-          componentProps: { treeData },
-        });
       });
 
       const getTitle = computed(() => (!unref(isUpdate) ? '新增' : '编辑'));
@@ -50,9 +50,10 @@
         try {
           const values = await validate();
           setModalProps({ confirmLoading: true });
-          await ApiAdd({ ...values });
+          // TODO custom api
+          await LocationAdd({ ...values });
           closeModal();
-          emit('success', { isUpdate: unref(isUpdate), values: { ...values } });
+          emit('success');
         } finally {
           setModalProps({ confirmLoading: false });
         }

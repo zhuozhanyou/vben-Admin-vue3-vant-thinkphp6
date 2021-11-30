@@ -50,10 +50,11 @@
       const showAction = hasPermission('editUser') || hasPermission('delUser');
       const [registerModal, { openModal }] = useModal();
       const searchInfo = reactive<Recordable>({});
-      const [registerTable, { reload }] = useTable({
+      const [registerTable, { reload, updateTableDataRecord }] = useTable({
         title: '账号列表',
         api: getAccountList,
         columns,
+        rowKey: 'user_id',
         formConfig: {
           labelWidth: 120,
           schemas: searchFormSchema,
@@ -93,8 +94,16 @@
         });
       }
 
-      function handleSuccess() {
-        reload();
+      function handleSuccess({ isUpdate, values }) {
+        if (isUpdate) {
+          // 演示不刷新表格直接更新内部数据。
+          // 注意：updateTableDataRecord要求表格的rowKey属性为string并且存在于每一行的record的keys中
+          console.log(values);
+          const result = updateTableDataRecord(values.user_id.toString(), values);
+          console.log(result);
+        } else {
+          reload();
+        }
       }
 
       function handleSelect(deptId = '') {

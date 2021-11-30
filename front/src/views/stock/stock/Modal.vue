@@ -7,9 +7,9 @@
   import { defineComponent, ref, computed, unref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
-  import { formSchema } from './data';
+  import { formSchema } from './schema.data';
 
-  import { ApiList, ApiAdd } from '/@/api/system/system';
+  import { StockAdd } from '/@/api/stock/stock';
   export default defineComponent({
     name: 'DeptModal',
     components: { BasicModal, BasicForm },
@@ -17,7 +17,7 @@
     setup(_, { emit }) {
       const isUpdate = ref(true);
 
-      const [registerForm, { resetFields, setFieldsValue, updateSchema, validate }] = useForm({
+      const [registerForm, { resetFields, setFieldsValue, validate }] = useForm({
         labelWidth: 100,
         schemas: formSchema,
         showActionButtonGroup: false,
@@ -33,15 +33,6 @@
             ...data.record,
           });
         }
-        const treeData = await ApiList([]);
-        treeData.unshift({
-          name: '顶级目录',
-          id: 0,
-        });
-        updateSchema({
-          field: 'pid',
-          componentProps: { treeData },
-        });
       });
 
       const getTitle = computed(() => (!unref(isUpdate) ? '新增' : '编辑'));
@@ -50,9 +41,10 @@
         try {
           const values = await validate();
           setModalProps({ confirmLoading: true });
-          await ApiAdd({ ...values });
+          // TODO custom api
+          await StockAdd({ ...values });
           closeModal();
-          emit('success', { isUpdate: unref(isUpdate), values: { ...values } });
+          emit('success');
         } finally {
           setModalProps({ confirmLoading: false });
         }

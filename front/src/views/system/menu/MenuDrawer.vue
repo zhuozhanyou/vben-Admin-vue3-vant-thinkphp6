@@ -78,7 +78,7 @@
           setDrawerProps({ confirmLoading: true });
           await MenuAdd({ ...values });
           closeDrawer();
-          emit('success');
+          emit('success', { isUpdate: unref(isUpdate), values: { ...values } });
         } finally {
           setDrawerProps({ confirmLoading: false });
         }

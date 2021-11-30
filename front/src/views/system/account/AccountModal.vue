@@ -59,7 +59,7 @@
           // TODO custom api
           await AccountAdd({ ...values });
           closeModal();
-          emit('success');
+          emit('success', { isUpdate: unref(isUpdate), values: { ...values } });
         } finally {
           setModalProps({ confirmLoading: false });
         }
