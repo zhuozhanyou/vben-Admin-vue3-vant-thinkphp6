@@ -74,6 +74,7 @@ class User extends BaseModel
         $list = $this->where($where)->order(['create_time' => 'desc'])->paginate()->each(function($item,$key){
             $item['role_name'] = $item['role_id']?join(" ",RoleModel::getRoleNames(explode(",",$item['role_id']))):'';
             $item['role_id'] = $item['role_id']? array_map(function($v){return (int)$v;},explode(",",$item['role_id'])):[];
+            $item['user_id'] = (string) $item['user_id'];
             return $item;
         })->toArray();
         return $list;

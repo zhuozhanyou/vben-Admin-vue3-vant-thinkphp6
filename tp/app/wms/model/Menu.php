@@ -51,6 +51,7 @@ class Menu extends BaseModel
             if ($item['parent_id'] == $parentId) {
                 $children = $this->getTreeData($menuList, (int)$item['menu_id']);
                 !empty($children) && $item['children'] = $children;
+                $item['menu_id'] = (string) $item['menu_id'];
                 $data[] = $item;
                 unset($menuList[$key]);
             }

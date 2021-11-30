@@ -29,7 +29,7 @@ class StockLocation extends BaseModel
         $query = $this->setWhere($param);
         $cate = getDic('stockCate');
         $list =  $query->with(['stock','goods'])->order($this->listOrder($param))
-                ->select()->each(function($item,$key) use($cate){
+                ->paginate()->each(function($item,$key) use($cate){
                     $item['goods_cate'] = isset($cate[$item['goods_cate']])?$cate[$item['goods_cate']]:'';
                     return $item;
                 })->toArray();

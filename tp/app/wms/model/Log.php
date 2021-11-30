@@ -27,7 +27,7 @@ class Log extends BaseModel
     public function getList(array $param)
     {
         $query = $this->setWhere($param);
-        return $query->with('api')->order($this->listOrder($param))->select()->toArray();
+        return $query->with('api')->order($this->listOrder($param))->paginate()->toArray();
     }
 
     public function add(array $data)

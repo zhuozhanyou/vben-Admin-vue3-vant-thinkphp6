@@ -20,7 +20,7 @@ class Dictionaries extends BaseModel
         !empty($params['code']) && $where[] = ['code', '=', $params['code']];
         !empty($params['parent_id']) && $where[] = ['parent_id', '=', $params['parent_id']];
         $where[] = ['type', '=', 20];
-        $list = $this->where($where)->order(['sort' => 'asc', 'create_time' => 'asc'])->select()->toArray();
+        $list = $this->where($where)->order(['sort' => 'asc', 'create_time' => 'asc'])->paginate()->toArray();
         return $list;
     }
     public function getListTree($params = [])

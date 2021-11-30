@@ -26,7 +26,7 @@ class Notice extends BaseModel
     public function getList(array $param)
     {
         $query = $this->setWhere($param);
-        return $query->order($this->listOrder($param))->select()->toArray();
+        return $query->order($this->listOrder($param))->paginate()->toArray();
     }
     public function add(array $data)
     {

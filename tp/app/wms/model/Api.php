@@ -27,6 +27,7 @@ class Api extends BaseModel
             if ($item['pid'] == $parentId) {
                 $children = $this->getTreeData($datalist, (int)$item['id']);
                 !empty($children) && $item['children'] = $children;
+                $item['id'] = (string) $item['id'];
                 $data[] = $item;
                 unset($datalist[$key]);
             }
