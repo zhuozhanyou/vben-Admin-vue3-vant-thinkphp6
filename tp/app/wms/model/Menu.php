@@ -20,7 +20,6 @@ class Menu extends BaseModel
     {
         $where = [];
         if($menuIds) $where[] = ['menu_id', 'in', $menuIds];
-        $where[] = ['menu_id', 'in', $menuIds];
         $where[] = ['status', '=', 1];
         return static::withoutGlobalScope()->where($where)->order(['orderNo' => 'asc', 'create_time' => 'asc'])
                 ->select()->each(function($item,$key){
