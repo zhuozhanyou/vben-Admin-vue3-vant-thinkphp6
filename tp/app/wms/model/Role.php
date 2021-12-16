@@ -14,7 +14,10 @@ class Role extends BaseModel
 
     public static function getMenuIds(array $roleIds)
     {
-        return (new self)->where('role_id', 'in', $roleIds)->column('menu_id');
+        $where = [];
+        $where[] = ['role_id', 'in', $roleIds];
+        $where[] = ['status', '=', 1];
+        return (new self)->where($where)->column('menu_id');
     }
     public static function getRoleNames(array $roleIds)
     {
